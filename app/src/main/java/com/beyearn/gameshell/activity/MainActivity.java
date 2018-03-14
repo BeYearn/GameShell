@@ -2,17 +2,15 @@ package com.beyearn.gameshell.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,19 +22,18 @@ import com.beyearn.gameshell.activity.permission.DefaultRationale;
 import com.beyearn.gameshell.activity.permission.LocationUtils;
 import com.beyearn.gameshell.activity.permission.PermissionSetting;
 import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.Profile;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView latitudeTv;
     private TextView addressTv;
     private Button btGetLoacation;
-    CallbackManager fbCallbackManager;
+    Button btLoginPage;
+    private Button btgetFbLoginInfo;
+    private Button btgetGlLoginInfo;
+    private Button btFbLogout;
+    private Button btGlLogout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,66 +63,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         longitudeTv = (TextView) findViewById(R.id.tv_longitude);
         latitudeTv = (TextView) findViewById(R.id.tv_latitude);
         addressTv = (TextView) findViewById(R.id.tv_address);
-
+        btLoginPage = (Button) findViewById(R.id.bt_login_page);
+        btgetFbLoginInfo = (Button) findViewById(R.id.bt_get_fb_info);
+        btgetGlLoginInfo = (Button) findViewById(R.id.bt_get_gl_info);
+        btFbLogout = (Button) findViewById(R.id.bt_fb_logout);
+        btGlLogout = (Button) findViewById(R.id.bt_gl_logout);
 
         btStart1 = (Button) findViewById(R.id.bt_start1);
         btGetLoacation = (Button) findViewById(R.id.bt_get_location);
         btGetLoacation.setOnClickListener(this);
+        btgetFbLoginInfo.setOnClickListener(this);
+        btgetGlLoginInfo.setOnClickListener(this);
         btStart1.setOnClickListener(this);
-
-        getfacebookKeyHash();
-        facebookLogin();
+        btLoginPage.setOnClickListener(this);
+        btFbLogout.setOnClickListener(this);
+        btGlLogout.setOnClickListener(this);
     }
 
-    private void getfacebookKeyHash() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.beyearn.gameshell", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("facebook KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (NoSuchAlgorithmException | PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void facebookLogin() {
-        findViewById(R.id.bt_get_fb_info).setOnClickListener(this);
-
-        fbCallbackManager = CallbackManager.Factory.create();
-
-        LoginButton loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends"));
-
-        // If using in a fragment
-        //loginButton.setFragment(this);
-
-        // Callback registration
-        loginButton.registerCallback(fbCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.e("facebook", "onSuccess :" + loginResult.getAccessToken().getToken());
-                Log.e("facebook", "onSuccess :" + loginResult.getAccessToken().getUserId());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.e("facebook", "onCancel");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                Log.e("facebook", "onError");
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        fbCallbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     private void requestPermission() {
 
@@ -174,6 +132,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Log.e("facebook", id + "  " + name + "  " + firstName + "  " + linkUri);
                 }
+                break;
+            case R.id.bt_fb_logout:
+                LoginManager manager = LoginManager.getInstance();
+                manager.logOut();
+                break;
+            case R.id.bt_get_gl_info:
+                // Check for existing Google Sign In account, if the user is already signed in the GoogleSignInAccount will be non-null.
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+                boolean loggedInGl = account != null;
+                Log.e("google", "loggedIn:" + loggedInGl);
+                if (loggedInGl) {
+                    String email = account.getEmail();
+                    String id = account.getId();
+
+                    Log.e("google", id + "  " + email);
+                }
+
+                break;
+            case R.id.bt_gl_logout:
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                mGoogleSignInClient.signOut()
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(MainActivity.this, "google logout", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                break;
+            case R.id.bt_login_page:
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
         }
     }

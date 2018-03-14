@@ -18,16 +18,46 @@
             android:layout_height="wrap_content"
             android:text="来个页面" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/fb_login_button"
+        <Button
+            android:id="@+id/bt_login_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp" />
-        <Button
+            android:text="登录页面" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:text="获取facebook消息"
-            android:id="@+id/bt_get_fb_info"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bt_get_fb_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取facebook登录信息" />
+
+            <Button
+                android:id="@+id/bt_fb_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fb_logout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/bt_get_gl_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取google登录信息" />
+
+            <Button
+                android:id="@+id/bt_gl_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="gl_logout" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

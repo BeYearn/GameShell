@@ -31,8 +31,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
 
         <activity android:name=".activity.FirstWebActivity" />
+
 
         <!--facebook-->
         <meta-data
