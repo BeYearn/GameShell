@@ -17,10 +17,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.beyearn.gameshell.EmaSDKListener;
+import com.beyearn.gameshell.GoogleUtils;
 import com.beyearn.gameshell.R;
-import com.beyearn.gameshell.activity.permission.DefaultRationale;
-import com.beyearn.gameshell.activity.permission.LocationUtils;
-import com.beyearn.gameshell.activity.permission.PermissionSetting;
+import com.beyearn.gameshell.permission.DefaultRationale;
+import com.beyearn.gameshell.permission.LocationUtils;
+import com.beyearn.gameshell.permission.PermissionSetting;
+import com.beyearn.gameshell.utils.EmaCallBackConst;
+import com.beyearn.gameshell.utils.ToastHelper;
 import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
@@ -34,6 +38,7 @@ import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btgetGlLoginInfo;
     private Button btFbLogout;
     private Button btGlLogout;
+    private Button btGlPay;
+    private Button btGlConsume;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btgetGlLoginInfo = (Button) findViewById(R.id.bt_get_gl_info);
         btFbLogout = (Button) findViewById(R.id.bt_fb_logout);
         btGlLogout = (Button) findViewById(R.id.bt_gl_logout);
+        btGlPay = (Button) findViewById(R.id.bt_gl_pay);
+        btGlConsume = (Button) findViewById(R.id.bt_gl_consume);
 
         btStart1 = (Button) findViewById(R.id.bt_start1);
         btGetLoacation = (Button) findViewById(R.id.bt_get_location);
@@ -78,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btLoginPage.setOnClickListener(this);
         btFbLogout.setOnClickListener(this);
         btGlLogout.setOnClickListener(this);
+        btGlPay.setOnClickListener(this);
+        btGlConsume.setOnClickListener(this);
+
+        GoogleUtils.getInstance().init(this);
     }
 
 
@@ -166,7 +179,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_login_page:
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
+            case R.id.bt_gl_pay:
+
+                HashMap<String, String> payParams = new HashMap<>();
+                payParams.put("server_id", "168000100001");
+                payParams.put("quantity", "1");
+                payParams.put("product_id", "com.emagroups.wol.40");
+                payParams.put("role_id", "test001");
+                payParams.put("area_id", "xxxx");
+                payParams.put("consume_now", "true");  // 是否立刻消耗
+
+
+                GoogleUtils.getInstance().pay(payParams, new EmaSDKListener() {
+                    @Override
+                    public void onCallBack(int resultCode, String decr) {
+                        ToastHelper.toast(MainActivity.this, decr);
+                        switch (resultCode) {
+                            case EmaCallBackConst.PAYSUCCESS:
+
+                                break;
+                            case EmaCallBackConst.PAYFALIED:
+
+                                break;
+                            case EmaCallBackConst.PAYCANCEl:
+
+                                break;
+                        }
+                    }
+                });
+                break;
+            case R.id.bt_gl_consume:
+                GoogleUtils.getInstance().consumeHad();
+                break;
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        GoogleUtils.getInstance().onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GoogleUtils.getInstance().onDestory();
     }
 
     private void getLoaction() {

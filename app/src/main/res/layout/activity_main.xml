@@ -58,6 +58,21 @@
                 android:text="gl_logout" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/bt_gl_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="google购买" />
+
+            <Button
+                android:id="@+id/bt_gl_consume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="消耗购买" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

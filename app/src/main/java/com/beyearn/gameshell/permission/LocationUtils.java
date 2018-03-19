@@ -1,4 +1,4 @@
-package com.beyearn.gameshell.activity.permission;
+package com.beyearn.gameshell.permission;
 
 /**
  * Created by beyearn on 2018/3/13.
@@ -12,11 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
-import android.widget.Toast;
-
-import com.yanzhenjie.permission.Action;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
 
 import java.io.IOException;
 import java.util.List;
