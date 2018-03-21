@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+
+    <script>
+        function funcCallAnd() {
+            if (window.android != null && typeof (window.android) != "undefined") {
+                window.android.callAndroid("你好,android");
+            } else {
+                alert("kong");
+            }
+        }
+
+
+//---------------------------------------------------------------------
+
+        function funcByAndroid() {
+            var firstP = document.getElementById("p1");
+            // firstP.innerText = "after change";
+            firstP.innerHTML = "after changed by android";
+        }
+
+        function funcByAndroidParam(msg){
+            alert(msg);
+        }
+
+        function funcByAndroidCallback(obj,msg){
+
+            alert("Js收到消息："+"id:"+obj.id.toString()+" name:"+obj.name+" age:"+obj.age.toString()+" msg:"+msg);
+            return "来自js的回调"
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <p id="p1">this is replace words</p>
+
+    <button type="button" onclick="funcCallAnd()">调用android方法</button>
+
+</body>
+
+</html>

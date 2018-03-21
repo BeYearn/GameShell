@@ -38,6 +38,7 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
 
         <activity android:name=".activity.FirstWebActivity" />
+        <activity android:name=".activity.SecondWebActivity"/>
 
 
         <!--facebook-->

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_start1:
-                startActivity(new Intent(this, FirstWebActivity.class));
+                startActivity(new Intent(this, SecondWebActivity.class));
                 break;
             case R.id.bt_get_location:
                 getLoaction();

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 25
@@ -41,5 +42,8 @@ dependencies {
 
     compile 'com.yanzhenjie:permission:2.0.0-rc3'
     compile 'com.just.agentweb:agentweb:4.0.2'
+
+    compile 'com.jakewharton:butterknife:8.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
 
 }
